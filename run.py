@@ -44,6 +44,12 @@ class WatchThread(threading.Thread):
 		session = Session()
 		session.commit()
 
+		slack.chat.post_message(
+			'test_bot',
+			'start',
+			as_user=True
+		)
+
 		i = 0
 		count = len(session.query(Server).all())
 		while True:
