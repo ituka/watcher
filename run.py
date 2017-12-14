@@ -27,7 +27,7 @@ class Server(Base):
 	url  = Column(Text, unique=True, nullable=False)
 	status = Column(Integer, default=0, nullable=True)
 
-	db_name = 'sqlite://' + slackbot_settings.DB_NAME
+	db_name = slackbot_settings.DB_NAME
 	engine = create_engine(db_name)
 
 
@@ -46,7 +46,7 @@ class WatchThread(threading.Thread):
 
 		slack.chat.post_message(
 			'test_bot',
-			'start',
+			slackbot_settings.START_MESSAGE,
 			as_user=True
 		)
 
@@ -64,7 +64,7 @@ class WatchThread(threading.Thread):
 
 						slack.chat.post_message(
 							'test_bot',
-							'revive ' + row.url,
+							slackbot_settings.RESTART_MESSAGE + row.url,
 							as_user=True
 						)
 					elif result == 0 or row.status == 1:
@@ -72,7 +72,7 @@ class WatchThread(threading.Thread):
 					else:
 						slack.chat.post_message(
 							'test_bot',
-							'error ' + row.url,
+							slackbot_settings.CUT_MESSAGE + row.url,
 							as_user=True
 						)
 						row.status = 1

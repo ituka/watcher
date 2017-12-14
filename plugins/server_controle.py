@@ -10,6 +10,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm.session import sessionmaker
 
 from run import Server
+import slackbot_settings
 
 import re
 import os
@@ -32,7 +33,7 @@ def add_server(message):
 		u = Server(url=url, status=0)
 		session.add(u)
 		session.commit()
-		message.send('ok')
+		message.send(slackbot_settings.ADD_SERVER)
 	except Exception as e:
 		message.send('%r' % e)
                 
@@ -45,6 +46,6 @@ def rm_server(message):
 	try:
 		db = session.query(Server).filter( Server.url == url ).delete()
 		session.commit()
-		message.send('ok')
+		message.send(slackbot_settings.RM_SERVER)
 	except Exception as e:
 		message.send('%r' % e)
