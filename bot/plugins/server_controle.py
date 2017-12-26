@@ -17,14 +17,14 @@ import os
 
 
 
-Base = declarative_base()
-e = Server.engine
-Base.metadata.create_all(e)
-Session = sessionmaker(bind=e)
-session = Session()
-
 @listen_to(r'^add_server\s+\S.*')
 def add_server(message):
+	Base = declarative_base()
+	e = Server.engine
+	Base.metadata.create_all(e)
+	Session = sessionmaker(bind=e)
+	session = Session()
+
 	tmp, url = message.body['text'].split(None, 1)
 	url = re.sub('<', '', url)
 	url = re.sub('>', '', url)
@@ -36,9 +36,17 @@ def add_server(message):
 		message.send(slackbot_settings.ADD_SERVER)
 	except Exception as e:
 		message.send('%r' % e)
+
+	session.close()
                 
 @listen_to(r'^rm_server\s+\S.*')
 def rm_server(message):
+	Base = declarative_base()
+	e = Server.engine
+	Base.metadata.create_all(e)
+	Session = sessionmaker(bind=e)
+	session = Session()
+
 	tmp, url = message.body['text'].split(None, 1)
 	url = re.sub('<', '', url)
 	url = re.sub('>', '', url)
@@ -49,3 +57,5 @@ def rm_server(message):
 		message.send(slackbot_settings.RM_SERVER)
 	except Exception as e:
 		message.send('%r' % e)
+
+	session.close()
