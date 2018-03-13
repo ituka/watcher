@@ -1,0 +1,18 @@
+version: '2'
+
+services:
+  watcher:
+    build: ./
+    container_name: bot
+    depends_on:
+      - db
+    entrypoint: /home/wait_db.sh
+  db:
+    image: postgres:9.4
+    environment:
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test_db
+    ports:
+      - "5432:5432"
+    restart: always
