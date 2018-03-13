@@ -19,43 +19,44 @@ import os
 
 @listen_to(r'^add_server\s+\S.*')
 def add_server(message):
-	Base = declarative_base()
-	e = Server.engine
-	Base.metadata.create_all(e)
-	Session = sessionmaker(bind=e)
-	session = Session()
+        Base = declarative_base()
+        e = Server.engine
+        Base.metadata.create_all(e)
+        Session = sessionmaker(bind=e)
+        session = Session()
 
-	tmp, url = message.body['text'].split(None, 1)
-	url = re.sub('<', '', url)
-	url = re.sub('>', '', url)
+        tmp, url = message.body['text'].split(None, 1)
+        url = re.sub('<', '', url)
+        url = re.sub('>', '', url)
 
-	try:
-		u = Server(url=url, status=0)
-		session.add(u)
-		session.commit()
-		message.send(slackbot_settings.ADD_SERVER)
-	except Exception as e:
-		message.send('%r' % e)
+        try:
+                adder = Server(url=url, status=0)
+                session.add(adder)
 
-	session.close()
-                
+                session.commit()
+                message.send(slackbot_settings.ADD_SERVER)
+        except Exception as e:
+                message.send('%r' % e)
+
+        session.close()
+
 @listen_to(r'^rm_server\s+\S.*')
 def rm_server(message):
-	Base = declarative_base()
-	e = Server.engine
-	Base.metadata.create_all(e)
-	Session = sessionmaker(bind=e)
-	session = Session()
+        Base = declarative_base()
+        e = Server.engine
+        Base.metadata.create_all(e)
+        Session = sessionmaker(bind=e)
+        session = Session()
 
-	tmp, url = message.body['text'].split(None, 1)
-	url = re.sub('<', '', url)
-	url = re.sub('>', '', url)
+        tmp, url = message.body['text'].split(None, 1)
+        url = re.sub('<', '', url)
+        url = re.sub('>', '', url)
 
-	try:
-		db = session.query(Server).filter( Server.url == url ).delete()
-		session.commit()
-		message.send(slackbot_settings.RM_SERVER)
-	except Exception as e:
-		message.send('%r' % e)
+        try:
+                session.query(Server).filter(Server.url == url).delete()
+                session.commit()
+                message.send(slackbot_settings.RM_SERVER)
+        except Exception as e:
+                message.send('%r' % e)
 
-	session.close()
+        session.close()
