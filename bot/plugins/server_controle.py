@@ -1,6 +1,6 @@
 # coding: utf-8
 
-from slackbot.bot import listen_to
+from slackbot.bot import respond_to
 
 from slackbot.bot import Bot
 from slacker import Slacker
@@ -17,7 +17,7 @@ import os
 
 
 
-@listen_to(r'^add_server\s+\S.*')
+@respond_to(r'^add_server\s+\S.*')
 def add_server(message):
         Base = declarative_base()
         e = Server.engine
@@ -40,7 +40,7 @@ def add_server(message):
 
         session.close()
 
-@listen_to(r'^rm_server\s+\S.*')
+@respond_to(r'^rm_server\s+\S.*')
 def rm_server(message):
         Base = declarative_base()
         e = Server.engine
